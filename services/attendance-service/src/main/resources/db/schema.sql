@@ -1,3 +1,8 @@
+/*
+ * 날짜: 2026-11-25
+ * 버전: 1.0.0
+ * 작성자: 한성현
+ */
 -- attendance-service 배포용 스키마
 -- attendance_service 데이터베이스에 연결한 뒤 실행한다.
 --   psql -d attendance_service -v ON_ERROR_STOP=1 -f schema.sql

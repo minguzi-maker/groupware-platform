@@ -165,8 +165,8 @@ public class GatewaySecurityConfig {
         );
 
         return token -> Mono
-                .fromCallable(() -> decoder.decode(token))
-                .subscribeOn(Schedulers.boundedElastic());
+                .fromCallable(() -> decoder.decode(token))// fromCallable: 동기 decoder를 Mono<Jwt>로 맞춤(필수)
+                .subscribeOn(Schedulers.boundedElastic());// boundedElastic: 이벤트 루프 보호. jwk-set-uri로 바꾸면 필수가 됨
     }
 
     private static ECKey ecKey(AuthProperties authProperties) {

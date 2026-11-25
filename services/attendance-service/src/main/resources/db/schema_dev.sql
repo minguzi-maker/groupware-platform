@@ -1,3 +1,8 @@
+/*
+ * 날짜: 2026-11-25
+ * 버전: 1.0.0
+ * 작성자: 한성현
+ */
 -- attendance-service 개발용 초기화 스크립트
 -- 기존 테이블을 모두 지우고 다시 만든다. 개발 DB에서만 실행한다.
 --   psql -d attendance_service -v ON_ERROR_STOP=1 -f schema_dev.sql
