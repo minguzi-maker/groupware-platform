@@ -129,7 +129,7 @@ public class GatewaySecurityConfig {
 
     private static UrlBasedCorsConfigurationSource corsSource(AppProperties appProperties) {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(appProperties.cors().allowedOrigins());
+        configuration.setAllowedOriginPatterns(appProperties.cors().allowedOrigins());
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("Authorization", "Set-Cookie"));

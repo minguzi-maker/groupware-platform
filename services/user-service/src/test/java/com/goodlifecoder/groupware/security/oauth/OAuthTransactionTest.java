@@ -18,7 +18,7 @@ class OAuthTransactionTest {
                 .authorizationUri("https://nid.naver.com/oauth2.0/authorize")
                 .clientId("naver-client")
                 .redirectUri("http://localhost:8081/user-service/user/oauth2/code/naver")
-                .scopes(Set.of("name", "email", "mobile"))
+                .scopes(Set.of("name", "email"))
                 .state("state-1")
                 .additionalParameters(Map.of(PkceParameterNames.CODE_CHALLENGE, "challenge"))
                 .attributes(Map.of(

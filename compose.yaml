@@ -17,6 +17,28 @@ services:
     configs:
       - source: postgres_init
         target: /docker-entrypoint-initdb.d/01-vector.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    networks:
+      - groupware
+
+  # 이미 있는 데이터 볼륨에는 initdb 스크립트가 다시 실행되지 않는다.
+  postgres-databases:
+    image: pgvector/pgvector:pg17
+    container_name: groupware-postgres-databases
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGPASSWORD: admin
+    configs:
+      - source: postgres_databases
+        target: /sql/databases.sql
+    entrypoint: ["psql", "-h", "postgres", "-U", "postgres", "-d", "postgres", "-v", "ON_ERROR_STOP=1", "-f", "/sql/databases.sql"]
+    restart: "no"
     networks:
       - groupware
 
@@ -164,6 +186,11 @@ configs:
   postgres_init:
     content: |
       CREATE EXTENSION IF NOT EXISTS vector;
+      CREATE DATABASE user_service ENCODING 'UTF8';
+  postgres_databases:
+    content: |
+      SELECT 'CREATE DATABASE user_service ENCODING ''UTF8'''
+      WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'user_service')\gexec
   garage_config:
     content: |
       metadata_dir = "/var/lib/garage/meta"

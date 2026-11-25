@@ -66,6 +66,20 @@ CREATE INDEX IF NOT EXISTS idx_user_tenant_memberships_tenant
 -- 역할 목록. scope 는 PLATFORM 또는 TENANT.
 -- permissions 원소는 서비스:API 이고, 와일드카드는 그 서비스 안에서만 쓴다. 예: hr:*
 -- 루트는 여기 두지 않고 user_tenant_memberships.is_root 에 둔다.
+-- CHECK 에는 서브쿼리를 넣을 수 없어 원소 형식은 함수로 확인한다.
+CREATE OR REPLACE FUNCTION roles_permissions_valid(permissions text[])
+RETURNS boolean
+LANGUAGE sql
+IMMUTABLE
+AS $$
+    SELECT cardinality(permissions) > 0
+       AND NOT EXISTS (
+           SELECT 1
+           FROM unnest(permissions) AS permission
+           WHERE permission !~ '^[^:*]+:[^:]+$'
+       );
+$$;
+
 CREATE TABLE IF NOT EXISTS roles (
     code         VARCHAR(50) PRIMARY KEY,
     scope        VARCHAR(20) NOT NULL,
@@ -74,14 +88,7 @@ CREATE TABLE IF NOT EXISTS roles (
     updated_at   TIMESTAMPTZ,
     CONSTRAINT uk_roles_code_scope UNIQUE (code, scope),
     CONSTRAINT roles_scope_check CHECK (scope IN ('PLATFORM', 'TENANT')),
-    CONSTRAINT roles_permissions_format CHECK (
-        cardinality(permissions) > 0
-        AND NOT EXISTS (
-            SELECT 1
-            FROM unnest(permissions) AS permission
-            WHERE permission !~ '^[^:*]+:[^:]+$'
-        )
-    )
+    CONSTRAINT roles_permissions_format CHECK (roles_permissions_valid(permissions))
 );
 
 -- 본사 역할. tenant_id 가 없다. PLATFORM 역할만 참조한다.

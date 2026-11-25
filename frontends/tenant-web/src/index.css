@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+/* 디자인 규칙: Deep Navy, Trust Blue, Teal Accent, Soft Emerald, Light Background */
+@theme {
+  /* Barlow Semi Condensed. GROUPWARE 워드마크. SIL Open Font License */
+  --font-brand: "Barlow Semi Condensed", sans-serif;
+  /* Deep Navy. 제목과 본문 글자 */
+  --color-text: #0F172A;
+  /* Deep Navy. 헤더와 사이드바 배경 */
+  --color-navy: #0F172A;
+  /* Trust Blue. 주요 버튼, 링크, 활성 메뉴 */
+  --color-main: #2563EB;
+  /* Teal Accent. 배지와 작은 강조 */
+  --color-accent: #0D9488;
+  /* Soft Emerald. 성공, 완료, 승인 상태 */
+  --color-success: #10B981;
+  /* 페이지와 섹션 배경 */
+  --color-background: #FFFFFF;
+  /* 헤더 배경. 페이지 배경과 분리한다 */
+  --color-header: #F8FAFC;
+  /* Light Background. 로그인·가입 화면의 박스와 풋터 */
+  --color-light: #F8FAFC;
+}

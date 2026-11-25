@@ -21,8 +21,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestCustomizers;
@@ -38,6 +36,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * 회원 이메일 로그인, 본사 이메일 로그인, 회원 소셜 로그인, 본사 소셜 로그인을 한 체인에 묶는다.
  * 회원 로그인은 account 토큰, 본사 로그인은 platform 토큰만 발급한다. 이전 세션은 끊는다.
  * 회사 선택은 POST /user/tenant-entry, 해제는 POST /user/tenant-exit 이다.
+ * 소속 목록은 GET /user/tenants, 새 회사는 POST /user/tenants 이다.
  * 본사 소셜은 /platform/oauth2/authorization 에서 시작하고 본사 토큰만 발급한다.
  * 세션은 STATELESS 이고 CSRF, 폼 로그인, HTTP Basic 은 끈다.
  * 아래에 적은 공개 주소만 통과하고, 나머지는 세션 쿠키가 있어야 한다.
@@ -65,12 +64,6 @@ public class SecurityConfig {
     private final SessionCookieFactory sessionCookieFactory;
     private final CurrentSessionUser currentSessionUser;
     private final RedisOAuth2AuthorizationRequestRepository authorizationRequestRepository;
-
-    /** 이메일 비밀번호 해시. DelegatingPasswordEncoder 를 쓴다. */
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
 
     /** 이메일 로그인 필터가 쓸 인증 매니저. */
     @Bean
