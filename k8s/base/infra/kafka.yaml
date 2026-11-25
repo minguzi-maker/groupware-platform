@@ -55,6 +55,9 @@ spec:
             - name: controller
               containerPort: 29093
           env:
+            # CVE-2026-114938 임시 조치. 패치된 JRE가 들어간 apache/kafka 이미지가 나오면 제거한다.
+            - name: KAFKA_OPTS
+              value: "-XX:-UseBASE64Intrinsics"
             - name: KAFKA_NODE_ID
               value: "1"
             - name: KAFKA_PROCESS_ROLES

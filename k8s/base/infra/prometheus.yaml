@@ -71,7 +71,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: prometheus
-          image: prom/prometheus:v3.5.0
+          image: prom/prometheus:v3.5.3
           imagePullPolicy: IfNotPresent
           args:
             - --config.file=/etc/prometheus/prometheus.yml

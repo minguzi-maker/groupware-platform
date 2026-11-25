@@ -5,6 +5,7 @@ IBM 5기 3팀 AI 에이전트 그룹웨어 SaaS 플랫폼
 여러 고객사(테넌트)가 하나의 애플리케이션과 데이터베이스를 나눠 쓰는 pooled 모델이다.
 
 로컬 설치 순서는 [설치 가이드](docs/설치-가이드.md)를 따릅니다.
+서비스를 띄우는 순서는 [첫 실행 가이드](docs/첫-실행-가이드.md)를 따릅니다.
 
 프론트엔드 문서는 [platform-web](frontends/platform-web/README.md)과 [tenant-web](frontends/tenant-web/README.md)에 있습니다.
 

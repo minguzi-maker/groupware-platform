@@ -56,7 +56,8 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: pgvector/pgvector:pg17
+          # pg17 태그는 마이너가 바뀌므로 PostgreSQL 17.12 다이제스트로 고정한다.
+          image: pgvector/pgvector:pg17@sha256:b513c48566e4777cd3370451400000c78eda6a08131d68f4c31d4a76f27bd8fd
           imagePullPolicy: IfNotPresent
           ports:
             - name: postgres
