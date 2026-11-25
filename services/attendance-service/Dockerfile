@@ -10,6 +10,6 @@ RUN ./gradlew bootJar --no-daemon -x test
 FROM eclipse-temurin:21-jre
 ENV TZ=Asia/Seoul
 WORKDIR /app
-COPY --from=build /app/build/libs/user-service-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/build/libs/attendance-service-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8083
 ENTRYPOINT ["java", "-jar", "app.jar"]

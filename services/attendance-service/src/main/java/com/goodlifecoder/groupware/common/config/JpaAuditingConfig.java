@@ -22,7 +22,7 @@ public class JpaAuditingConfig {
 
 
     @Bean
-    public DateTimeProvider auditingDateTimeprovider(Clock clock){
+    public DateTimeProvider auditingDateTimeProvider(Clock clock){
         return () -> Optional.of(OffsetDateTime.now(clock));
     }
 }
