@@ -5,6 +5,8 @@
  */
 package com.goodlifecoder.groupware.security.config;
 
+import com.goodlifecoder.groupware.security.jwt.AccessTokenClaimValidator;
+import com.goodlifecoder.groupware.security.jwt.TokenAuthenticationConverter;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.Curve;
 import com.nimbusds.jose.jwk.ECKey;
@@ -13,7 +15,7 @@ import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,7 +23,6 @@ import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.web.SecurityFilterChain;
-
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.ECPublicKey;
@@ -32,18 +33,20 @@ import java.util.Base64;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        return http.csrf(c -> c.disable())//csrf보호 끄기(쿠키 비활성)
+        return http.csrf(c -> c.disable())//Bearer 헤더만 받으므로 CSRF 불필요
                 .sessionManagement(s -> s
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))//서버에 로그인 상태 저장 안함. 요청시마다 토큰을 새로 검증.
                 .authorizeHttpRequests(a -> a
                         .requestMatchers("/actuator/health/**").permitAll()
-                        .anyRequest().authenticated())//나머지 전무 토큰 검증 요함
+                        .requestMatchers("/platform/**").hasAuthority("CONTEXT_platform")
+                        .anyRequest().hasAuthority("CONTEXT_tenant"))//나머지 모든요청은 tenant를 가지고있어야함.
                 .oauth2ResourceServer(o -> o
-                        .jwt(Customizer.withDefaults()))//accessTokenDecoder
+                        .jwt(j -> j.jwtAuthenticationConverter(new TokenAuthenticationConverter())))//accessTokenDecoder
                 .build();
     }
 
@@ -63,7 +66,8 @@ public class SecurityConfig {
                         new JwtTimestampValidator(), // 만료시간, 사용시작시간 검증
                         new JwtIssuerValidator(// iss가 현재 인증 서버 값과 같은지 검증
                                 authProperties.accessTokenIssuer()
-                        )
+                        ),
+                        new AccessTokenClaimValidator()
                 )
         );
 
